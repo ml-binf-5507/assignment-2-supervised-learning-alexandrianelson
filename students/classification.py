@@ -42,7 +42,14 @@ def train_logistic_regression_grid(X_train, y_train, param_grid=None):
     # - Use GridSearchCV with cv=5
     # - Fit on training data
     # - Return fitted GridSearchCV object
-    pass
+
+    
+    log_regression = LogisticRegression(max_iter=1000)
+    grid_search = GridSearchCV(log_regression, param_grid, cv=5)
+
+    grid_search.fit(X_train, y_train)
+
+    return grid_search
 
 
 def train_knn_grid(X_train, y_train, param_grid=None):
@@ -78,7 +85,14 @@ def train_knn_grid(X_train, y_train, param_grid=None):
     # - Use GridSearchCV with cv=5
     # - Fit on training data
     # - Return fitted GridSearchCV object
-    pass
+
+    knn_model = KNeighborsClassifier()
+    grid_search = GridSearchCV(knn_model, param_grid, cv=5)
+
+    grid_search.fit(X_train, y_train)
+
+    return grid_search
+    
 
 
 def get_best_logistic_regression(X_train, y_train, X_test, y_test, param_grid=None):
@@ -110,7 +124,23 @@ def get_best_logistic_regression(X_train, y_train, X_test, y_test, param_grid=No
     # - Use train_logistic_regression_grid
     # - Extract best model
     # - Return dictionary
-    pass
+
+    # Run the grid search
+    model = train_logistic_regression_grid(X_train, y_train, param_grid)
+
+    y_pred = model.predict(X_test)
+
+    score = model.score(X_test, y_test)
+
+    # Best model
+    best_model = model.best_estimator_
+
+    # Create dictionary to return results of the best model
+    results_dict = {"model": model.best_estimator_, 
+                    "best_params": model.best_params_, 
+                    "cv_results_df": pd.DataFrame(model.cv_results_)}
+
+    return results_dict
 
 
 def get_best_knn(X_train, y_train, X_test, y_test, param_grid=None):
@@ -143,4 +173,20 @@ def get_best_knn(X_train, y_train, X_test, y_test, param_grid=None):
     # - Use train_knn_grid
     # - Extract best model and best_k
     # - Return dictionary
-    pass
+    
+    # Run grid search
+    model = train_knn_grid(X_train, y_train, param_grid)
+
+    y_pred = model.predict(X_test)
+
+    score = model.score(X_test, y_test)
+
+    # Extract best model
+    best_model = model.best_estimator_
+
+    results_dict = {"model": model.best_estimator_, # best fitted model
+                    "best_params": model.best_params_, # best parameters found
+                    "best_k": model.best_params_["n_neighbors"], # best_k
+                    "cv_results_df": pd.DataFrame(model.cv_results_)}
+
+    return results_dict

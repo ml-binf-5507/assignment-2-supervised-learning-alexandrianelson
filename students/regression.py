@@ -38,7 +38,32 @@ def train_elasticnet_grid(X_train, y_train, l1_ratios, alphas):
     #   - Calculate R² score on training data
     #   - Store results
     # - Return DataFrame with results
-    pass
+
+    # Create results list
+    results = []
+
+    for ratio in l1_ratios: # Iterate over L1 ratios
+        for alpha in alphas: # Iterate over alphas
+            model = ElasticNet(
+                l1_ratio=ratio,
+                alpha=alpha,
+                random_state=42,
+                max_iter=5000
+            )
+
+            model.fit(X_train, y_train)
+
+            score = model.score(X_train, y_train) # Calculate R2 score
+
+            # Store results as a dictionary in the results list
+            results.append({"l1_ratio": ratio, 
+                            "alpha" : alpha,
+                            "r2_score" : score,
+                            "model" : model})
+    
+    df = pd.DataFrame(results)
+    
+    return df
 
 
 def create_r2_heatmap(results_df, l1_ratios, alphas, output_path=None):
@@ -68,7 +93,29 @@ def create_r2_heatmap(results_df, l1_ratios, alphas, output_path=None):
     # - Add colorbar
     # - Save to output_path if provided
     # - Return figure object
-    pass
+
+    # Pivot results_df to create the matrix
+    heatmap_data = results_df.pivot(
+        index="alpha", 
+        columns="l1_ratio", 
+        values="r2_score")
+
+    # Create figure
+    figure = plt.figure(figsize=(8,6))
+
+    # Create a heatmap
+    sns.heatmap(heatmap_data, annot=True, fmt=".2f", cmap="viridis")
+    
+    # Add labels for the axes and the figure
+    plt.xlabel("L1 Ratio")
+    plt.ylabel("Alpha")
+    plt.title("ElasticNet R² Scores")
+
+    # Create conditional for the output path
+    if output_path:
+        plt.savefig(output_path)
+
+    return figure
 
 
 def get_best_elasticnet_model(X_train, y_train, X_test, y_test, 
@@ -111,4 +158,25 @@ def get_best_elasticnet_model(X_train, y_train, X_test, y_test,
     # - Train models using train_elasticnet_grid
     # - Select model with highest test R² (not training R²)
     # - Return dictionary with best model and parameters
-    pass
+
+    # Train models using train_elastic_grid
+    results_df = train_elasticnet_grid(X_train, y_train, l1_ratios=l1_ratios, alphas=alphas)
+
+    # Store model's r2 results in the data frame under a new column
+    results_df["test_r2"] = results_df["model"].apply(lambda x: x.score(X_test, y_test))
+
+    # Select the row with the best r2 score
+    index = results_df["test_r2"].idxmax()
+    best_row = results_df.loc[index]
+
+    # Return dictionary with best model and parameters
+    best_model = {
+        "model":best_row["model"],
+        "best_l1_ratio":best_row["l1_ratio"],
+        "best_alpha":best_row["alpha"],
+        "train_r2":best_row["r2_score"],
+        "test_r2":best_row["test_r2"],
+        "results_df":results_df
+    }
+
+    return best_model
