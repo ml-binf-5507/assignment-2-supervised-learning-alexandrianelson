@@ -169,7 +169,7 @@ def generate_auroc_curve(y_true, y_pred_proba, model_name="Model",
     ax.plot([0,1], [0,1], "k--", label="Random Classifier")
     ax.set_xlabel("False Positive Rate")
     ax.set_ylabel("True Positive Rate")
-    ax.set_title("ROC Curve")
+    ax.set_title(f"{model_name} ROC Curve")
     ax.legend()
     ax.grid(alpha=0.3)
 
@@ -230,7 +230,7 @@ def generate_auprc_curve(y_true, y_pred_proba, model_name="Model",
     ax.plot(recall, precision, label=f"{model_name} PR Curve (AP={ap:.3f})")
     ax.set_xlabel('Recall')
     ax.set_ylabel('Precision')
-    ax.set_title('Precision-Recall Curve')
+    ax.set_title(f'{model_name} Precision-Recall Curve')
     ax.legend()
     ax.grid(alpha=0.3)
 
