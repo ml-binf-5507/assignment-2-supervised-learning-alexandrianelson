@@ -38,7 +38,7 @@ Do NOT:
 
 3. **How much of your final code came from AI vs. your own work?** (e.g., "AI gave me the formula, I wrote the loop" or "AI helped me debug an error")
    
-   I'd say about 85% of the final code was my own work. I got really stuck around the GridSearch parts and the graphing since I forgot some of it from last semester.
+   I'd say about 85% of the final code was my own work, and then the remaining 15% was with AI's help, but not directly copied from it. I got really stuck around the GridSearch parts and the graphing since I forgot some of it from last semester. So, I would ask about syntax and debugging for help in that area.
 
 4. **Can you explain your code?** (Can you walk through what each function does and why you wrote it that way?)
    

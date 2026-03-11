@@ -31,6 +31,7 @@ def calculate_r2_score(y_true, y_pred):
     # Use sklearn's r2_score
     from sklearn.metrics import r2_score
 
+    # R2 calculation
     r2 = r2_score(y_true, y_pred)
 
     return float(r2)
@@ -92,6 +93,7 @@ def calculate_auroc_score(y_true, y_pred_proba):
     # Use sklearn's roc_auc_score
     from sklearn.metrics import roc_auc_score
 
+    # AUROC calculation
     auc = roc_auc_score(y_true, y_pred_proba)
 
     return float(auc)
@@ -117,6 +119,7 @@ def calculate_auprc_score(y_true, y_pred_proba):
     # Use sklearn's average_precision_score
     from sklearn.metrics import average_precision_score
 
+    # AUPRC calculation
     ap = average_precision_score(y_true, y_pred_proba)
     
     return float(ap)
